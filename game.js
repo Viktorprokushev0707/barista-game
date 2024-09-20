@@ -10,6 +10,15 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas(); // Вызываем при загрузке страницы
 
+// Предотвращаем прокрутку страницы на мобильных устройствах
+document.body.addEventListener('touchstart', function(event) {
+    event.preventDefault();
+}, { passive: false });
+
+document.body.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, { passive: false });
+
 // Загружаем изображения
 const baristaImage = new Image();
 baristaImage.src = 'assets/barista.png';
