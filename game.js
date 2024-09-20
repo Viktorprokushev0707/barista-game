@@ -35,7 +35,7 @@ moneyImage.src = 'assets/money.png';
 syrnikImage.src = 'assets/syrnik.png';
 
 // Параметры игры
-let barista = { x: canvas.width / 2 - 75, y: canvas.height - 200, width: 150, height: 200 };
+let barista = { x: canvas.width / 2 - 50, y: canvas.height - 100, width: 100, height: 150 };
 let objects = [];
 let score = 0;
 
@@ -43,8 +43,8 @@ let score = 0;
 function createObject() {
     const images = [coffeeImage, toastImage, moneyImage, syrnikImage];
     const randomImage = images[Math.floor(Math.random() * images.length)];
-    const x = Math.random() * (canvas.width - 100);
-    objects.push({ x, y: 0, width: 100, height: 100, image: randomImage });
+    const x = Math.random() * (canvas.width - 50);
+    objects.push({ x, y: 0, width: 50, height: 50, image: randomImage });
 }
 
 // Обновление игры
@@ -77,11 +77,8 @@ function draw() {
     // Отрисовка баристы
     ctx.drawImage(baristaImage, barista.x, barista.y, barista.width, barista.height);
 
-    // Отрисовка объектов с добавлением фона
+    // Отрисовка объектов
     objects.forEach(object => {
-        // Добавляем фон под изображение
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-        ctx.fillRect(object.x, object.y, object.width, object.height);
         ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
     });
 
