@@ -38,6 +38,8 @@ syrnikImage.src = 'assets/syrnik.png';
 let barista = { x: canvas.width / 2 - 50, y: canvas.height - 100, width: 100, height: 150 };
 let objects = [];
 let score = 0;
+let missed = 0; // Счетчик пропущенных объектов
+let gameOver = false; // Флаг окончания игры
 
 // Функция для создания новых объектов
 function createObject() {
@@ -49,24 +51,37 @@ function createObject() {
 
 // Обновление игры
 function update() {
-    objects.forEach(object => object.y += 5);
+    if (!gameOver) {
+        objects.forEach(object => object.y += 5);
 
-    // Убираем объекты, если они вышли за пределы экрана
-    objects = objects.filter(object => object.y < canvas.height);
+        // Убираем объекты, если они вышли за пределы экрана и увеличиваем счетчик пропущенных
+        objects = objects.filter(object => {
+            if (object.y >= canvas.height) {
+                missed++;
+                return false;
+            }
+            return true;
+        });
 
-    // Проверка на столкновение с баристой
-    objects.forEach(object => {
-        if (object.y + object.height > barista.y &&
-            object.x < barista.x + barista.width &&
-            object.x + object.width > barista.x) {
-            score++;
-            objects = objects.filter(o => o !== object);
+        // Проверка на столкновение с баристой
+        objects.forEach(object => {
+            if (object.y + object.height > barista.y &&
+                object.x < barista.x + barista.width &&
+                object.x + object.width > barista.x) {
+                score++;
+                objects = objects.filter(o => o !== object);
+            }
+        });
+
+        // Если пропущено больше 10 объектов, заканчиваем игру
+        if (missed >= 10) {
+            gameOver = true;
         }
-    });
 
-    // Создаем новые объекты с интервалом
-    if (Math.random() < 0.05) {
-        createObject();
+        // Создаем новые объекты с интервалом
+        if (Math.random() < 0.05) {
+            createObject();
+        }
     }
 }
 
@@ -74,18 +89,28 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Отрисовка баристы
-    ctx.drawImage(baristaImage, barista.x, barista.y, barista.width, barista.height);
+    if (!gameOver) {
+        // Отрисовка баристы
+        ctx.drawImage(baristaImage, barista.x, barista.y, barista.width, barista.height);
 
-    // Отрисовка объектов
-    objects.forEach(object => {
-        ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
-    });
+        // Отрисовка объектов
+        objects.forEach(object => {
+            ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
+        });
 
-    // Отрисовка счёта
-    ctx.font = "30px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText("Score: " + score, 10, 30);
+        // Отрисовка счёта и пропущенных объектов
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("Score: " + score, 10, 30);
+        ctx.fillText("Missed: " + missed, 10, 70);
+    } else {
+        // Если игра окончена, показываем сообщение
+        ctx.font = "50px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("Game Over", canvas.width / 2 - 150, canvas.height / 2);
+        ctx.font = "30px Arial";
+        ctx.fillText("Final Score: " + score, canvas.width / 2 - 100, canvas.height / 2 + 50);
+    }
 }
 
 // Управление баристой
