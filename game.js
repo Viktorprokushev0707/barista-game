@@ -10,7 +10,7 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas(); // Вызываем при загрузке страницы
 
-// Предотвращаем прокрутку страницы на мобильных устройствах
+// Полное предотвращение прокрутки страницы на мобильных устройствах
 document.body.addEventListener('touchstart', function(event) {
     event.preventDefault();
 }, { passive: false });
