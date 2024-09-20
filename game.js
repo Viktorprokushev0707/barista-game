@@ -1,8 +1,14 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 800;
-canvas.height = 600;
+// Устанавливаем размеры канваса в зависимости от экрана
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Вызываем при загрузке страницы
 
 // Загружаем изображения
 const baristaImage = new Image();
@@ -35,9 +41,13 @@ function createObject() {
 
 // Обновление игры
 function update() {
+    // Движение объектов вниз
     objects.forEach(object => object.y += 5);
+
+    // Убираем объекты, если они вышли за пределы экрана
     objects = objects.filter(object => object.y < canvas.height);
 
+    // Проверка на столкновение с баристой
     objects.forEach(object => {
         if (object.y + object.height > barista.y &&
             object.x < barista.x + barista.width &&
@@ -47,6 +57,7 @@ function update() {
         }
     });
 
+    // Создаем новые объекты с интервалом
     if (Math.random() < 0.05) {
         createObject();
     }
@@ -55,16 +66,22 @@ function update() {
 // Отрисовка игры
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Отрисовка баристы
     ctx.drawImage(baristaImage, barista.x, barista.y, barista.width, barista.height);
+
+    // Отрисовка объектов
     objects.forEach(object => {
         ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
     });
 
+    // Отрисовка счёта
     ctx.font = "30px Arial";
     ctx.fillStyle = "white";
     ctx.fillText("Score: " + score, 10, 30);
 }
 
+// Управление баристой
 document.addEventListener('keydown', function (event) {
     if (event.key === "ArrowLeft" && barista.x > 0) {
         barista.x -= 20;
@@ -74,6 +91,16 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
+// Управление для сенсорных экранов
+canvas.addEventListener('touchmove', function(event) {
+    let touch = event.touches[0];
+    let touchX = touch.clientX - canvas.offsetLeft;
+    if (touchX > 0 && touchX < canvas.width) {
+        barista.x = touchX - barista.width / 2; // Центрируем баристу по касанию
+    }
+});
+
+// Основной игровой цикл
 function gameLoop() {
     update();
     draw();
