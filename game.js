@@ -81,4 +81,42 @@ function draw() {
     objects.forEach(object => {
         // Добавляем фон под изображение
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-        ctx.fillRect(object​⬤
+        ctx.fillRect(object.x, object.y, object.width, object.height);
+        ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
+    });
+
+    // Отрисовка счёта
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText("Score: " + score, 10, 30);
+}
+
+// Управление баристой
+document.addEventListener('keydown', function (event) {
+    if (event.key === "ArrowLeft" && barista.x > 0) {
+        barista.x -= 20;
+    }
+    if (event.key === "ArrowRight" && barista.x < canvas.width - barista.width) {
+        barista.x += 20;
+    }
+});
+
+// Управление для сенсорных экранов
+canvas.addEventListener('touchmove', function(event) {
+    let touch = event.touches[0];
+    let touchX = touch.clientX - canvas.offsetLeft;
+    if (touchX > 0 && touchX < canvas.width) {
+        barista.x = touchX - barista.width / 2; // Центрируем баристу по касанию
+    }
+});
+
+// Основной игровой цикл
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+
+baristaImage.onload = function () {
+    gameLoop();
+};
