@@ -21,13 +21,12 @@ const toastImage = new Image();
 toastImage.src = 'assets/toast.png';
 
 const moneyImage = new Image();
-moneyImage.src = 'assets/money.png';
-
 const syrnikImage = new Image();
+moneyImage.src = 'assets/money.png';
 syrnikImage.src = 'assets/syrnik.png';
 
 // Параметры игры
-let barista = { x: 350, y: 500, width: 100, height: 150 };
+let barista = { x: canvas.width / 2 - 50, y: canvas.height - 100, width: 100, height: 150 };
 let objects = [];
 let score = 0;
 
@@ -41,7 +40,6 @@ function createObject() {
 
 // Обновление игры
 function update() {
-    // Движение объектов вниз
     objects.forEach(object => object.y += 5);
 
     // Убираем объекты, если они вышли за пределы экрана
