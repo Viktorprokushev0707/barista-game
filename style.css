@@ -1,9 +1,15 @@
-body {
+/* Полностью отключаем прокрутку на странице */
+html, body {
     margin: 0;
+    padding: 0;
+    overflow: hidden; /* Отключает прокрутку */
+    height: 100%;
+}
+
+body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background: url('assets/fon.png') no-repeat center center fixed;
     background-size: cover;
 }
